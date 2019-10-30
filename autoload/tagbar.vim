@@ -354,6 +354,7 @@ function! s:CreateAutocommands() abort
         if exists('##QuitPre')
             autocmd QuitPre * let s:vim_quitting = 1
         endif
+        " 这两个自动化命令在个人环境中作用不大, 且容易导致打开文件时屏幕出现两次刷屏,可以关闭
         autocmd WinEnter * nested call s:HandleOnlyWindow()
         autocmd WinEnter * if bufwinnr(s:TagbarBufName()) == -1 |
                          \     call s:ShrinkIfExpanded() |
@@ -1755,10 +1756,10 @@ function! s:PrintKinds(typeinfo, fileinfo) abort
                     let tag.depth                 = 1
                 endfor
             endif
-
-            if !g:tagbar_compact
-                call add(output, '')
-            endif
+            " 控制是否在每个类型的折叠之间显示一个空行, 打开注释时添加空行
+            " if !g:tagbar_compact
+                " call add(output, '')
+            " endif
         endif
     endfor
 
@@ -1825,7 +1826,7 @@ endfunction
 function! s:PrintHelp() abort
     if !g:tagbar_compact && s:short_help
         silent 0put ='\" Press ' . s:get_map_str('help') . ' for help'
-        silent  put _
+        " silent  put _ " 去除首行帮助信息和其他信息空行分割
     elseif !s:short_help
         silent 0put ='\" Tagbar keybindings'
         silent  put ='\"'
